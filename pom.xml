@@ -8,14 +8,29 @@
     <groupId>com.example.helloendpoints</groupId>
     <artifactId>helloendpoints</artifactId>
 
+    <repositories>
+        <repository>
+            <id>MavenCentral</id>
+            <name>Maven repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <properties>
-        <app.id>your-app-id</app.id>
-        <app.version>1</app.version>
+        <app.id>helloworld</app.id>
+        <app.version>0.0.1</app.version>
         <appengine.version>1.9.24</appengine.version>
         <gcloud.plugin.version>0.9.58.v20150505</gcloud.plugin.version>
-
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <datanucleus.version>3.1.3</datanucleus.version>
+        <datanucleus.plugin.version>3.1.1</datanucleus.plugin.version>
         <maven.compiler.showDeprecation>true</maven.compiler.showDeprecation>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <prerequisites>
@@ -35,6 +50,26 @@
             <version>${appengine.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.google.appengine.orm</groupId>
+            <artifactId>datanucleus-appengine</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-core</artifactId>
+            <version>${datanucleus.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-api-jdo</artifactId>
+            <version>${datanucleus.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-endpoints-deps</artifactId>
+            <version>1.9.21</version>
+        </dependency>
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.5</version>
@@ -44,6 +79,11 @@
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <version>1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>javax.jdo</groupId>
@@ -131,14 +171,16 @@
                 <configuration>
                     <enableJarClasses>false</enableJarClasses>
                     <version>${app.version}</version>
+                    <version>0-0-1</version>
                     <!-- Comment in the below snippet to bind to all IPs instead of just localhost -->
                     <!-- address>0.0.0.0</address>
                     <port>8080</port -->
                     <!-- Comment in the below snippet to enable local debugging with a remote debugger
                          like those included with Eclipse or IntelliJ -->
-                    <!-- jvmFlags>
-                      <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</jvmFlag>
-                    </jvmFlags -->
+                    <jvmFlags>
+                        <jvmFlag>-Xdebug</jvmFlag>
+                        <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=8000,server=y,suspend=n</jvmFlag>
+                    </jvmFlags>
                 </configuration>
                 <executions>
                     <execution>
@@ -149,12 +191,37 @@
                 </executions>
             </plugin>
             <plugin>
-              <groupId>com.google.appengine</groupId>
-              <artifactId>gcloud-maven-plugin</artifactId>
-              <version>${gcloud.plugin.version}</version>
-              <configuration>
-                <set_default>true</set_default>
-              </configuration>
+                <groupId>com.google.appengine</groupId>
+                <artifactId>gcloud-maven-plugin</artifactId>
+                <version>${gcloud.plugin.version}</version>
+                <configuration>
+                    <set_default>true</set_default>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.datanucleus</groupId>
+                <artifactId>maven-datanucleus-plugin</artifactId>
+                <version>${datanucleus.plugin.version}</version>
+                <configuration>
+                    <api>JDO</api>
+                    <props>${basedir}/datanucleus.properties</props>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.datanucleus</groupId>
+                        <artifactId>datanucleus-core</artifactId>
+                        <version>${datanucleus.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
