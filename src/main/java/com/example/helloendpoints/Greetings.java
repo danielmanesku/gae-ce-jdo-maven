@@ -5,9 +5,8 @@ import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.appengine.api.users.User;
 
-import java.util.ArrayList;
-
 import javax.inject.Named;
+import java.util.ArrayList;
 
 /**
  * Defines v1 of a helloworld API, which provides simple "greeting" methods.
@@ -16,7 +15,7 @@ import javax.inject.Named;
     name = "helloworld",
     version = "v1",
     scopes = {Constants.EMAIL_SCOPE},
-    clientIds = {Constants.WEB_CLIENT_ID, Constants.ANDROID_CLIENT_ID, Constants.IOS_CLIENT_ID},
+    clientIds = {Constants.API_EXPLORER_CLIENT_ID, Constants.WEB_CLIENT_ID, Constants.ANDROID_CLIENT_ID, Constants.IOS_CLIENT_ID},
     audiences = {Constants.ANDROID_AUDIENCE}
 )
 public class Greetings {
